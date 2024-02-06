@@ -1,0 +1,8 @@
+in modern next js app folder is the most important..here we set up overall pages that we want in our web site
+
+we  will have inside app folder page.js and layout.js which are reserved filename in next js
+
+we also have one more file called global.css in appp directory,,
+we can import this global css file inside layout file so that it's available in all pages
+
+besides that we also have an icon.png  file, that's a special file name if you add a file as icon.png that wiuld treated as a fav icon

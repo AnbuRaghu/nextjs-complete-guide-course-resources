@@ -1,0 +1,2 @@
+
+we  will have inside app folder page.js and layout.js which are reserved filename in next js

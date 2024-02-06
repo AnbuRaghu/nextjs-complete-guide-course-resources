@@ -1,0 +1,30 @@
+import Link from 'next/link';
+import Image from 'next/image';
+
+import logoImg from '@/assets/logo.png';
+import classes from './main-header.module.css';
+
+export default function MainHeader() {
+  return (
+    <header className={classes.header}>
+      <Link className={classes.logo} href="/">
+        <Image src={logoImg} alt="A plate with food on it" priority />
+        NextLevel Food
+      </Link>
+
+      <nav className={classes.nav}>
+        <ul>
+          <li>
+            <Link href="/meals">Browse Meals</Link>
+          </li>
+          <li>
+            <Link href="/community">Foodies Community</Link>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+
+
+here for next Omage component we dont have to use .src  to access the imported image and we need to add the 'priority attribute to tell next js load the image as far as quick possible

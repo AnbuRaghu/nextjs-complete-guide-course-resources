@@ -1,0 +1,40 @@
+we have a layout file that's a speciaö file and reerve name.
+wheres page.js file defines the content of page the layout.js defines the shell arround one or m ore pages.. in every next js app we need atleast 1 layout root file at the top of app foldr
+
+this componet renders an htm with body tag and accept children as props and render those children in the body tag
+
+we might wonder where the head element is <head></head> which contains title and some meta dta it is rendered in a different way in next js by exporting a special variable called metadata..this metadat also reserved name,
+if you export the metadata it should contain an object,where you can set the tile and description of the page also other meta datas which will be applied to all pages that are covered by layout, that's why we don't have the head in html but simply all meta data whic is set in head will be set by this metadata or automatically behind the scene by next js
+
+import './globals.css'
+
+export const metadata = {
+  title: 'NextJS Course App',
+  description: 'Your first NextJS app!',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+
+
+
+// getting dynamic path from url
+we can addd a dynamic path by adding a nested folder with the [] brackets and we can name it as we want but inside [] we must have a page.js
+next js actually passes props object all thosse page  components 
+export default function BlogPostPage(props) {
+
+and allthose page componets get one special props called params we can destructure likw below .this props passed by next js automatically we can get the dynamic path with params props
+export default function BlogPostPage({ params }) {
+  return (
+    <main>
+      <h1>Blog Post</h1>
+      <p>{params.slug}</p>
+    </main>
+  );
+}
+
