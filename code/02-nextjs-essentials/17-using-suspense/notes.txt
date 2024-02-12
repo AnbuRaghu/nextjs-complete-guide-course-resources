@@ -1,0 +1,102 @@
+using suspense in next js
+-------------------------
+
+without suspense componet lokks like this 
+---------------------------------------
+import Link from 'next/link';
+
+import classes from './page.module.css';
+import MealsGrid from '@/components/meals/meals-grid';
+import { getMeals } from '@/lib/meals';
+
+export default async function MealsPage() {
+  const meals = await getMeals();
+
+  return (
+    <>
+      <header className={classes.header}>
+        <h1>
+          Delicious meals, created{' '}
+          <span className={classes.highlight}>by you</span>
+        </h1>
+        <p>
+          Choose your favorite recipe and cook it yourself. It is easy and fun!
+        </p>
+        <p className={classes.cta}>
+          <Link href="/meals/share">
+            Share Your Favorite Recipe
+          </Link>
+        </p>
+      </header>
+      <main className={classes.main}>
+        <MealsGrid meals={meals} />
+      </main>
+    </>
+  );
+}
+
+
+with suspense we changed the component like this 
+----
+import { Suspense } from 'react';
+import Link from 'next/link';
+
+import classes from './page.module.css';
+import MealsGrid from '@/components/meals/meals-grid';
+import { getMeals } from '@/lib/meals';
+
+async function Meals() {
+  const meals = await getMeals();
+
+  return <MealsGrid meals={meals} />;
+}
+
+export default function MealsPage() {
+  return (
+    <>
+      <header className={classes.header}>
+        <h1>
+          Delicious meals, created{' '}
+          <span className={classes.highlight}>by you</span>
+        </h1>
+        <p>
+          Choose your favorite recipe and cook it yourself. It is easy and fun!
+        </p>
+        <p className={classes.cta}>
+          <Link href="/meals/share">Share Your Favorite Recipe</Link>
+        </p>
+      </header>
+      <main className={classes.main}>
+        <Suspense fallback={<p className={classes.loading}>Fetching meals...</p>}>
+          <Meals />
+        </Suspense>
+      </main>
+    </>
+  );
+}
+
+
+
+-------------------------
+
+
+instead of using default loading provided ny next js ,we can use suspense
+
+next j salso gives other way of handling loading
+we can go tho the componet which fetch data and we can create a seperate component..that idea behind this componet is that now this component fetches the data now
+for example here we created a seperate componet that fetch the data and returns the componet which shows the data and then we call call the meal component.. what is the advantage.. we have seperated that data fetching component into a seperate component and now we can wrap that component that built in in react  called <Suspense></Suspense> component
+
+a suspense is a componen t that provided by react you have to import that allows to handle loading state and show some fall back dcontent untill some data loaded..
+we have to just pass the fallback props to suspense  and pass the fallback content to the fallback prop
+
+async function Meals() {
+  const meals = await getMeals();
+
+  return <MealsGrid meals={meals} />;
+}
+
+
+this is ow we called it here 
+<Suspense fallback={<p className={classes.loading}>Fetching meals...</p>}>
+          <Meals />
+        </Suspense>

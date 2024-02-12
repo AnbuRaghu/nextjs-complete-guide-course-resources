@@ -1,0 +1,53 @@
+next js gives a hook called usePathname to get the path and style the active linkk
+
+this hook gives the currently active path we can import it from import { usePathname } from 'next/navigation';
+
+we can add the actuve clas like this export default function NavLink({ href, children }) {
+  const path = usePathname();
+
+  return (
+    <Link
+      href={href}
+      className={
+        path.startsWith(href)
+          ? `${classes.link} ${classes.active}`
+          : classes.link
+      }
+    >
+      {children}
+    </Link>
+  );
+}
+
+note:
+try to add the use client  to the component as deep as possible which means here only this piece of above component treated as cleient componnent becuase we add in this component the use client directive
+in this example instead of setting whole main header compone t as use client we seperated nav link componebt and add only this component as client component
+
+we can use client component inside of server component like this in main -header.js in this case main header is server component and <NavLink/> is client component  like below 
+
+
+
+import default function MainHeader() {
+  return (
+    <>
+      <MainHeaderBackground />
+      <header className={classes.header}>
+        <Link className={classes.logo} href="/">
+          <Image src={logoImg} alt="A plate with food on it" priority />
+          NextLevel Food
+        </Link>
+
+        <nav className={classes.nav}>
+          <ul>
+            <li>
+              <NavLink href="/meals">Browse Meals</NavLink>
+            </li>
+            <li>
+              <NavLink href="/community">Foodies Community</NavLink>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    </>
+  );
+}

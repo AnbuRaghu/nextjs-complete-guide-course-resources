@@ -1,0 +1,14 @@
+in next js 14 so to say all react components are treated asserver component and rendered in server side
+
+rEACT server component :
+--------------------------
+components that are rendered only on the server 
+by default all react components in next js are server componentsadvantage:Less client side js great for seo
+
+
+
+client components:
+-----------------
+componets that are prerendered on the server but then also potentially on the client.
+we have to tell next js that thi sis a client component s by adding 'use client directive on the top of the file
+componets which has event handler and hook like use state and use effect
