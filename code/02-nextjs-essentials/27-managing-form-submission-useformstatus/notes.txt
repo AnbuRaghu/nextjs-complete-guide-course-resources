@@ -1,0 +1,124 @@
+import fs from 'node:fs';
+
+import sql from 'better-sqlite3';
+import slugify from 'slugify';
+import xss from 'xss';
+
+const db = sql('meals.db');
+
+export async function getMeals() {
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  // throw new Error('Loading meals failed');
+  return db.prepare('SELECT * FROM meals').all();
+}
+
+export function getMeal(slug) {
+  return db.prepare('SELECT * FROM meals WHERE slug = ?').get(slug);
+}
+
+export async function saveMeal(meal) {
+  meal.slug = slugify(meal.title, { lower: true });
+  meal.instructions = xss(meal.instructions);
+// getting extensions of the image
+  const extension = meal.image.name.split('.').pop();
+  // create a uique file name
+  const fileName = `${meal.slug}.${extension}`;
+
+  const stream = fs.createWriteStream(`public/images/${fileName}`);
+  // majke the image buffered we must use await
+  const bufferedImage = await meal.image.arrayBuffer();
+
+  stream.write(Buffer.from(bufferedImage), (error) => {
+    if (error) {
+      throw new Error('Saving image failed!');
+    }
+  });
+
+  meal.image = `/images/${fileName}`;
+
+  db.prepare(`
+    INSERT INTO meals
+      (title, summary, instructions, creator, creator_email, image, slug)
+    VALUES (
+      @title,
+      @summary,
+      @instructions,
+      @creator,
+      @creator_email,
+      @image,
+      @slug
+    )
+  `).run(meal);
+}
+
+
+// import { useFormStatus } from 'react-dom';
+react gives us to track the form submitting status  with tha abive hook this hook is only called inside form not in othwr part that's why we created a seperate formssubmit button and call the button inside form.
+'use client';
+
+import { useFormStatus } from 'react-dom';
+
+export default function MealsFormSubmit() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button disabled={pending}>
+      {pending ? 'Submitting...' : 'Share Meal'}
+    </button>
+  );
+}
+#
+
+// componet where this button called import ImagePicker from '@/components/meals/image-picker';
+import classes from './page.module.css';
+import { shareMeal } from '@/lib/actions';
+import MealsFormSubmit from '@/components/meals/meals-form-submit';
+
+export default function ShareMealPage() {
+  return (
+    <>
+      <header className={classes.header}>
+        <h1>
+          Share your <span className={classes.highlight}>favorite meal</span>
+        </h1>
+        <p>Or any other meal you feel needs sharing!</p>
+      </header>
+      <main className={classes.main}>
+        <form className={classes.form} action={shareMeal}>
+          <div className={classes.row}>
+            <p>
+              <label htmlFor="name">Your name</label>
+              <input type="text" id="name" name="name" required />
+            </p>
+            <p>
+              <label htmlFor="email">Your email</label>
+              <input type="email" id="email" name="email" required />
+            </p>
+          </div>
+          <p>
+            <label htmlFor="title">Title</label>
+            <input type="text" id="title" name="title" required />
+          </p>
+          <p>
+            <label htmlFor="summary">Short Summary</label>
+            <input type="text" id="summary" name="summary" required />
+          </p>
+          <p>
+            <label htmlFor="instructions">Instructions</label>
+            <textarea
+              id="instructions"
+              name="instructions"
+              rows="10"
+              required
+            ></textarea>
+          </p>
+          <ImagePicker label="Your image" name="image" />
+          <p className={classes.actions}>
+            <MealsFormSubmit />
+          </p>
+        </form>
+      </main>
+    </>
+  );
+}

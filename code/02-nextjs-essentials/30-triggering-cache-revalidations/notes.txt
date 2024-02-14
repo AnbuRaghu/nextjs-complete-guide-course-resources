@@ -1,13 +1,21 @@
+next js caching too aggressively.. we can tell next js to avoid cache for somee paths  in this case whenever we add new meal.. there is a built in function by next js
+calle revalidatePath() this tells to next js to revalidate the cache that belong to the certain route path
+in this cache meals path
+revalidatePath('/meals)..by default only tht path will be revalidated not any nested path if we have under meals..to solve this we can add a 2nd param called 'layout'
+
+revalidatePath('/meals','layout')
+
 'use server';
 
 import { redirect } from 'next/navigation';
 
 import { saveMeal } from './meals';
+import { revalidatePath } from 'next/cache';
 
 function isInvalidText(text) {
   return !text || text.trim() === '';
 }
-// igt adds two params prevstate and submitted data
+
 export async function shareMeal(prevState, formData) {
   const meal = {
     title: formData.get('title'),
@@ -34,5 +42,6 @@ export async function shareMeal(prevState, formData) {
   }
 
   await saveMeal(meal);
+  revalidatePath('/meals');
   redirect('/meals');
 }

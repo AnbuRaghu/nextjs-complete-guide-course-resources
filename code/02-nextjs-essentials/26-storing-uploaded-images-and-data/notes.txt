@@ -1,0 +1,1 @@
+we use this package import xss from 'xss'; for sanitizing dangerous html 
